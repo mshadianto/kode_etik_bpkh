@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sosialisasi Kode Etik Korporasi BPKH - Platform Terpadu</title>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, onSnapshot, orderBy, query, limit } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDs_cqeKgKIvjoJdK6ggNxW2jsVgCycvJY",
+            authDomain: "kode-etik-bpkh.firebaseapp.com",
+            projectId: "kode-etik-bpkh",
+            storageBucket: "kode-etik-bpkh.firebasestorage.app",
+            messagingSenderId: "881467913217",
+            appId: "1:881467913217:web:60e90ad355c4004a61bc00",
+            measurementId: "G-8ZBZ9QMTK2"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+        window.analytics = getAnalytics(app);
+        
+        // Export functions to global scope
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
+        window.onSnapshot = onSnapshot;
+        window.orderBy = orderBy;
+        window.query = query;
+        window.limit = limit;
+        window.logEvent = logEvent;
+    </script>
+    
+    <!-- Font Awesome & PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5aa0 0%, #1e3a78 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Main Navigation */
+        .main-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: 2px solid #2c5aa0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #2c5aa0;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background: linear-gradient(45deg, #2c5aa0, #1e3a78);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .header .files-count {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+
+        .overview-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .doc-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #2c5aa0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(44, 90, 160, 0.2);
+        }
+
+        .doc-card h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-card .doc-number {
+            background: #2c5aa0;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .doc-details {
+            margin-top: 15px;
+        }
+
+        .doc-details .detail-item {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .doc-details .detail-label {
+            font-weight: 600;
+            width: 120px;
+            color: #2c5aa0;
+        }
+
+        .key-points {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .key-points h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .key-points li {
+            margin-bottom: 5px;
+        }
+
+        .expandable-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .expandable-content.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .expand-btn {
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #1e3a78;
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Interactive App Styles */
+        .interactive-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sub-nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        .sub-nav-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            margin: 0 5px;
+        }
+        
+        .sub-nav-tab.active {
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .interactive-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .interactive-section.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Quiz Styles */
+        .quiz-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: #4CAF50;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        /* Leaderboard */
+        .leaderboard {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rank {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .score {
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        /* Polling */
+        .poll-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .poll-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .poll-option:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .poll-bar {
+            height: 30px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Comments */
+        .comments-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            resize: vertical;
+        }
+        
+        .comment-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comment-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        /* Certificate */
+        .certificate {
+            background: white;
+            border: 10px solid #4CAF50;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .certificate h2 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .doc-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-tabs">
+                <a href="#" class="nav-tab active" onclick="showMainSection('materi-overview')">
+                    <i class="fas fa-book"></i> Materi Kebijakan
+                </a>
+                <a href="#" class="nav-tab" onclick="showMainSection('interactive-app')">
+                    <i class="fas fa-gamepad"></i> Pembelajaran Interaktif
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Materi Overview Section -->
+    <div id="materi-overview" class="content-section active">
+        <div class="container">
+            <header class="header">
+                <h1><i class="fas fa-mosque"></i> Kode Etik Korporasi BPKH</h1>
+                <div class="subtitle">Materi Sosialisasi Komprehensif</div>
+                <div class="files-count">
+                    <i class="fas fa-file-alt"></i> Analisis 6 Dokumen Kebijakan
+                </div>
+                <div style="margin-top: 0.75rem; font-size: 1rem; color: #FFC107; font-weight: 500; text-align: center; font-family: 'Poppins', sans-serif;">
+                    Narasumber: M Sopian Hadianto | Anggota Komite Audit
+                </div>
+            </header>
+
+            <!-- Corporate Ethics Introduction -->
+            <section class="overview-section">
+                <h2 style="color: #2c5aa0; text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-compass"></i> Apa itu Kode Etik Korporasi?
+                </h2>
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 20px; text-align: center;">
+                        <i class="fas fa-book-open"></i> Definisi dan Konsep Dasar
+                    </h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; text-align: justify;">
+                        <strong>Kode Etik Korporasi</strong> adalah seperangkat prinsip, nilai, dan standar perilaku yang dirancang untuk memandu 
+                        tindakan dan keputusan seluruh anggota organisasi dalam menjalankan tugas dan tanggung jawabnya. 
+                        Kode etik berfungsi sebagai kompas moral yang membantu organisasi mencapai tujuannya dengan cara yang benar, 
+                        bertanggung jawab, dan berkelanjutan.
+                    </p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 10px; border-left: 4px solid #2c5aa0;">
+                        <h4 style="color: #2c5aa0; margin-bottom: 10px;">
+                            <i class="fas fa-bullseye"></i> Tujuan Utama
+                        </h4>
+                        <ul style="font-size: 0.95rem; color: #555;">
+                            <li>Memberikan panduan moral dan etis</li>
+                            <li>Mencegah perilaku tidak etis</li>
+                            <li>Membangun budaya organisasi yang positif</li>
+                            <li>Meningkatkan kepercayaan stakeholder</li>
+                        </ul>
+                    </div>
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 10px; border-left: 4px solid #2c5aa0;">
+                        <h4 style="color: #2c5aa0; margin-bottom: 10px;">
+                            <i class="fas fa-cogs"></i> Fungsi Praktis
+                        </h4>
+                        <ul style="font-size: 0.95rem; color: #555;">
+                            <li>Standar perilaku minimum</li>
+                            <li>Panduan pengambilan keputusan</li>
+                            <li>Basis sistem reward & punishment</li>
+                            <li>Framework compliance</li>
+                        </ul>
+                    </div>
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 10px; border-left: 4px solid #2c5aa0;">
+                        <h4 style="color: #2c5aa0; margin-bottom: 10px;">
+                            <i class="fas fa-users"></i> Manfaat Organisasi
+                        </h4>
+                        <ul style="font-size: 0.95rem; color: #555;">
+                            <li>Reputasi dan kredibilitas tinggi</li>
+                            <li>Risiko hukum yang minimal</li>
+                            <li>Kinerja jangka panjang yang berkelanjutan</li>
+                            <li>Daya tarik bagi talent terbaik</li>
+                        </ul>
+                    </div>
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 10px; border-left: 4px solid #2c5aa0;">
+                        <h4 style="color: #2c5aa0; margin-bottom: 10px;">
+                            <i class="fas fa-globe"></i> Standar Internasional
+                        </h4>
+                        <ul style="font-size: 0.95rem; color: #555;">
+                            <li>OECD Corporate Governance</li>
+                            <li>UN Global Compact</li>
+                            <li>ISO 37001 (Anti-Bribery)</li>
+                            <li>Transparency International</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BPKH Ethics Analysis -->
+            <section class="overview-section">
+                <h2 style="color: #2c5aa0; text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-mosque"></i> Kode Etik di BPKH: Analisis 6 Dokumen
+                </h2>
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 0 10px 10px 0; margin-bottom: 30px;">
+                    <h4 style="color: #856404; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i> Temuan Utama
+                    </h4>
+                    <p style="color: #856404; font-size: 1.1rem;">
+                        Dari analisis 6 dokumen kebijakan BPKH, ditemukan bahwa <strong>kode etik tersebar dalam berbagai dokumen</strong> 
+                        dengan pendekatan yang berbeda-beda berdasarkan target audience dan fungsi spesifik, namun <strong>belum ada 
+                        dokumen kode etik terpusat</strong> yang komprehensif.
+                    </p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px;">
+                        <h3 style="margin-bottom: 20px;">
+                            <i class="fas fa-users-cog"></i> Etika Jabatan (Board Manual)
+                        </h3>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Target:</strong> Badan Pelaksana & Dewan Pengawas
+                        </div>
+                        <h4 style="margin-bottom: 15px;">7 Prinsip Utama:</h4>
+                        <ol style="padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Keteladanan</strong> - Menjadi role model etis</li>
+                            <li><strong>Kepatuhan Hukum</strong> - Mematuhi regulasi</li>
+                            <li><strong>Transparansi & Kerahasiaan</strong> - Balance disclosure</li>
+                            <li><strong>Pelayanan Prima</strong> - Service excellence</li>
+                            <li><strong>Anti Conflict of Interest</strong> - Hindari benturan</li>
+                            <li><strong>Anti Personal Gain</strong> - Larangan keuntungan pribadi</li>
+                            <li><strong>Anti Korupsi</strong> - Zero tolerance policy</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 25px; border-radius: 15px;">
+                        <h3 style="margin-bottom: 20px;">
+                            <i class="fas fa-shield-alt"></i> Sistem Anti-Penyuapan (ISO 37001)
+                        </h3>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Target:</strong> Seluruh Pegawai & Mitra Bisnis
+                        </div>
+                        <h4 style="margin-bottom: 15px;">Pakta Integritas - 5 Komitmen:</h4>
+                        <ol style="padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Contoh Baik</strong> - Patuh pada peraturan</li>
+                            <li><strong>Profesional & Transparan</strong> - Anti KKN</li>
+                            <li><strong>Hindari Benturan Kepentingan</strong> - No personal interest</li>
+                            <li><strong>Tolak Gratifikasi</strong> - Tidak terima pemberian</li>
+                            <li><strong>Whistleblowing</strong> - Laporkan penyimpangan</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: white; padding: 25px; border-radius: 15px;">
+                        <h3 style="margin-bottom: 20px;">
+                            <i class="fas fa-search"></i> Etika Auditor Internal (Piagam Audit)
+                        </h3>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Target:</strong> Fungsi Audit Internal
+                        </div>
+                        <h4 style="margin-bottom: 15px;">4 Pilar Etika Profesi:</h4>
+                        <ol style="padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Integritas</strong> - Kejujuran & keberanian profesional</li>
+                            <li><strong>Objektivitas</strong> - Tidak bias & independen</li>
+                            <li><strong>Kerahasiaan</strong> - Menjaga informasi sensitif</li>
+                            <li><strong>Kompetensi</strong> - Profesionalisme berkelanjutan</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); color: #2c3e50; padding: 25px; border-radius: 15px;">
+                        <h3 style="margin-bottom: 20px;">
+                            <i class="fas fa-exclamation-triangle"></i> Gap Analysis
+                        </h3>
+                        <div style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Status:</strong> Parsial & Tersebar
+                        </div>
+                        <h4 style="margin-bottom: 15px;">Kelemahan Saat Ini:</h4>
+                        <ul style="padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Tidak Ada Dokumen Pusat</strong> - Kode etik tersebar</li>
+                            <li><strong>Target Audience Berbeda</strong> - Tidak terintegrasi</li>
+                            <li><strong>Level Detail Bervariasi</strong> - Tidak konsisten</li>
+                            <li><strong>Kurang Comprehensive</strong> - Coverage terbatas</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Portfolio Dokumen -->
+            <section class="overview-section">
+                <h2 style="color: #2c5aa0; text-align: center; margin-bottom: 25px;">
+                    <i class="fas fa-chart-pie"></i> Portfolio Dokumen Kebijakan BPKH
+                </h2>
+                <p style="text-align: center; font-size: 1.1rem; color: #555; margin-bottom: 30px;">
+                    Koleksi dokumen kebijakan BPKH yang komprehensif untuk memastikan tata kelola yang baik, 
+                    sistem manajemen mutu, dan kepatuhan terhadap standar internasional.
+                </p>
+                
+                <div class="docs-grid">
+                    <div class="doc-card" onclick="toggleExpand(this)">
+                        <h3>
+                            <div class="doc-number">1</div>
+                            Pedoman Tata Kelola Board Manual
+                        </h3>
+                        <div class="doc-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Nomor:</span>
+                                <span>PKBP 01/2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Tanggal:</span>
+                                <span>4 April 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status:</span>
+                                <span>Aktif - Terbaru</span>
+                            </div>
+                        </div>
+                        <div class="key-points">
+                            <h4><i class="fas fa-key"></i> Poin Kunci:</h4>
+                            <ul>
+                                <li>Pedoman tata kelola Badan Pelaksana dan Dewan Pengawas</li>
+                                <li>Framework Good Corporate Governance</li>
+                                <li>Prinsip transparansi, akuntabilitas, responsibilitas</li>
+                                <li>Hubungan kerja antar organ BPKH</li>
+                            </ul>
+                        </div>
+                        <button class="expand-btn" onclick="event.stopPropagation();">
+                            <i class="fas fa-plus"></i> Detail Lengkap
+                        </button>
+                        <div class="expandable-content">
+                            <h4>Ruang Lingkup:</h4>
+                            <p>Mengatur tata kelola Badan Pelaksana dan Dewan Pengawas dengan prinsip good governance, termasuk peran, tanggung jawab, dan mekanisme pengawasan.</p>
+                            <h4>Dampak:</h4>
+                            <p>Meningkatkan efektivitas governance, transparansi pengambilan keputusan, dan akuntabilitas dalam pengelolaan dana haji.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more doc-cards here for other documents -->
+                </div>
+            </section>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <button class="btn" onclick="showMainSection('interactive-app')" style="font-size: 1.2rem; padding: 15px 30px;">
+                    <i class="fas fa-arrow-right"></i> Lanjut ke Pembelajaran Interaktif
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive App Section -->
+    <div id="interactive-app" class="content-section">
+        <div class="container">
+            <div class="interactive-header">
+                <div class="logo">BPKH</div>
+                <h1>Platform Pembelajaran Interaktif</h1>
+                <p>Sosialisasi Kode Etik BPKH dengan Quiz, Polling, dan Sertifikat Digital</p>
+                
+                <!-- User Registration -->
+                <div style="margin-top: 20px;">
+                    <input type="text" id="userName" placeholder="Masukkan nama Anda" style="padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-right: 10px;">
+                    <button onclick="registerUser()" class="btn">Mulai Pembelajaran</button>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div id="progressText">Progress: 0%</div>
+            </div>
+            
+            <!-- Sub Navigation -->
+            <div class="sub-nav-tabs">
+                <button class="sub-nav-tab active" onclick="showInteractiveSection('materi')">📚 Materi</button>
+                <button class="sub-nav-tab" onclick="showInteractiveSection('quiz')">🎮 Quiz</button>
+                <button class="sub-nav-tab" onclick="showInteractiveSection('polling')">📊 Polling</button>
+                <button class="sub-nav-tab" onclick="showInteractiveSection('leaderboard')">🏆 Leaderboard</button>
+                <button class="sub-nav-tab" onclick="showInteractiveSection('analytics')">📈 Analytics</button>
+            </div>
+            
+            <!-- Materi Section -->
+            <div id="materi" class="interactive-section active">
+                <h2>📚 Materi Kode Etik BPKH</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+                    <div class="quiz-container" onclick="showMaterialDetail('integritas')">
+                        <h3>🎯 Prinsip Integritas</h3>
+                        <p>Memahami pentingnya kejujuran dan konsistensi dalam pelayanan audit</p>
+                    </div>
+                    
+                    <div class="quiz-container" onclick="showMaterialDetail('objektivitas')">
+                        <h3>⚖️ Prinsip Objektivitas</h3>
+                        <p>Menjaga netralitas dan menghindari konflik kepentingan</p>
+                    </div>
+                    
+                    <div class="quiz-container" onclick="showMaterialDetail('kompetensi')">
+                        <h3>🎓 Prinsip Kompetensi</h3>
+                        <p>Mengembangkan kemampuan profesional secara berkelanjutan</p>
+                    </div>
+                    
+                    <div class="quiz-container" onclick="showMaterialDetail('kerahasiaan')">
+                        <h3>🔒 Prinsip Kerahasiaan</h3>
+                        <p>Melindungi informasi sensitif dan rahasia klien</p>
+                    </div>
+                </div>
+                
+                <!-- Material Detail -->
+                <div id="materialDetail" style="display: none;">
+                    <div id="materialContent"></div>
+                    <button onclick="completeMaterial()" class="btn" style="margin-top: 20px;">Selesai Membaca</button>
+                </div>
+                
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h3>💬 Diskusi & Feedback</h3>
+                    <div class="comment-form">
+                        <textarea class="comment-input" id="commentText" placeholder="Bagikan pendapat atau pertanyaan Anda..."></textarea>
+                        <button onclick="addComment()" class="btn">Kirim</button>
+                    </div>
+                    <div id="commentsList"></div>
+                </div>
+            </div>
+            
+            <!-- Quiz Section -->
+            <div id="quiz" class="interactive-section">
+                <h2>🎮 Quiz Interaktif</h2>
+                <div id="quizContainer">
+                    <div class="quiz-container">
+                        <div class="question" id="questionText">Loading...</div>
+                        <div class="options" id="optionsContainer"></div>
+                        <div style="margin-top: 20px;">
+                            <button onclick="submitAnswer()" class="btn" id="submitBtn">Submit Jawaban</button>
+                            <button onclick="nextQuestion()" class="btn btn-secondary" id="nextBtn" style="display: none;">Pertanyaan Selanjutnya</button>
+                        </div>
+                        <div id="feedback" style="margin-top: 15px; padding: 10px; border-radius: 10px; display: none;"></div>
+                    </div>
+                    
+                    <div id="quizResults" style="display: none;">
+                        <h3>🎉 Quiz Selesai!</h3>
+                        <div id="scoreDisplay"></div>
+                        <button onclick="generateCertificate()" class="btn" style="margin-top: 20px;">Dapatkan Sertifikat</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Polling Section -->
+            <div id="polling" class="interactive-section">
+                <h2>📊 Polling Langsung</h2>
+                <div class="poll-container">
+                    <h3>Apakah Anda akan melaporkan pelanggaran etika yang Anda saksikan?</h3>
+                    <div class="poll-option" onclick="vote('ya')">
+                        <span>Ya, pasti akan melaporkan</span>
+                        <div class="poll-bar" id="pollBarYa" style="width: 0%;"></div>
+                        <span id="pollPercentYa">0%</span>
+                    </div>
+                    <div class="poll-option" onclick="vote('mungkin')">
+                        <span>Mungkin, tergantung situasi</span>
+                        <div class="poll-bar" id="pollBarMungkin" style="width: 0%;"></div>
+                        <span id="pollPercentMungkin">0%</span>
+                    </div>
+                    <div class="poll-option" onclick="vote('tidak')">
+                        <span>Tidak, karena khawatir konsekuensi</span>
+                        <div class="poll-bar" id="pollBarTidak" style="width: 0%;"></div>
+                        <span id="pollPercentTidak">0%</span>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <strong>Total Votes: <span id="totalVotes">0</span></strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Leaderboard Section -->
+            <div id="leaderboard" class="interactive-section">
+                <h2>🏆 Leaderboard</h2>
+                <div class="leaderboard" id="leaderboardList">
+                    Loading...
+                </div>
+            </div>
+            
+            <!-- Analytics Section -->
+            <div id="analytics" class="interactive-section">
+                <h2>📈 Analytics & Statistik</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div class="quiz-container">
+                        <h3>👥 Total Peserta</h3>
+                        <div id="totalParticipants" style="font-size: 2em; color: #4CAF50;">0</div>
+                    </div>
+                    <div class="quiz-container">
+                        <h3>⏱️ Rata-rata Waktu</h3>
+                        <div id="averageTime" style="font-size: 2em; color: #2196F3;">0 menit</div>
+                    </div>
+                    <div class="quiz-container">
+                        <h3>📊 Tingkat Kelulusan</h3>
+                        <div id="passRate" style="font-size: 2em; color: #FF9800;">0%</div>
+                    </div>
+                    <div class="quiz-container">
+                        <h3>💬 Total Komentar</h3>
+                        <div id="totalComments" style="font-size: 2em; color: #E91E63;">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certificate Template -->
+            <div id="certificateTemplate" style="display: none;">
+                <div class="certificate">
+                    <h2>SERTIFIKAT</h2>
+                    <p>Diberikan kepada</p>
+                    <h3 id="certificateName" style="font-size: 28px; margin: 20px 0; color: #2196F3;"></h3>
+                    <p>Yang telah berhasil menyelesaikan</p>
+                    <h4 style="margin: 20px 0;">Sosialisasi Kode Etik BPKH</h4>
+                    <p>dengan nilai <span id="certificateScore"></span></p>
+                    <div style="margin-top: 30px;">
+                        <p>BPKH - Badan Pengawasan Keuangan Haji</p>
+                        <p id="certificateDate"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+    
+    <script>
+        // Global Variables
+        let currentUser = null;
+        let currentQuestion = 0;
+        let userScore = 0;
+        let selectedAnswer = null;
+        let startTime = Date.now();
+        let materialProgress = [];
+        
+        // Quiz Questions
+        const quizQuestions = [
+            {
+                question: "Apa yang dimaksud dengan prinsip integritas dalam kode etik BPKH?",
+                options: [
+                    "Memiliki kemampuan teknis yang tinggi",
+                    "Jujur dan konsisten dalam setiap tindakan",
+                    "Mengutamakan kepentingan pribadi",
+                    "Bekerja sesuai dengan instruksi atasan"
+                ],
+                correct: 1,
+                explanation: "Integritas berarti jujur dan konsisten dalam setiap tindakan, menjadi fondasi kepercayaan dalam profesi audit."
+            },
+            {
+                question: "Dalam situasi konflik kepentingan, apa yang harus dilakukan seorang auditor?",
+                options: [
+                    "Tetap melanjutkan tugas tanpa memberitahu siapa pun",
+                    "Mengundurkan diri dari penugasan dan melaporkan konflik tersebut",
+                    "Meminta imbalan tambahan untuk kompensasi",
+                    "Meminta rekan kerja untuk menggantikan secara diam-diam"
+                ],
+                correct: 1,
+                explanation: "Objektivitas mengharuskan auditor untuk mengundurkan diri dan melaporkan konflik kepentingan demi menjaga independensi."
+            },
+            {
+                question: "Prinsip kerahasiaan dalam audit berarti:",
+                options: [
+                    "Tidak boleh berbicara dengan siapa pun tentang pekerjaan",
+                    "Melindungi informasi klien dan hanya mengungkapkannya sesuai ketentuan",
+                    "Menyimpan semua dokumen di rumah",
+                    "Tidak memberikan laporan kepada atasan"
+                ],
+                correct: 1,
+                explanation: "Kerahasiaan mengharuskan perlindungan informasi klien dan hanya boleh diungkapkan sesuai dengan ketentuan hukum dan profesional."
+            },
+            {
+                question: "Pengembangan kompetensi profesional dilakukan melalui:",
+                options: [
+                    "Hanya mengandalkan pengalaman kerja",
+                    "Pembelajaran berkelanjutan dan pelatihan regular",
+                    "Membaca berita umum setiap hari",
+                    "Mengikuti trend media sosial"
+                ],
+                correct: 1,
+                explanation: "Kompetensi profesional memerlukan pembelajaran berkelanjutan dan pelatihan regular untuk mengikuti perkembangan standar dan regulasi."
+            },
+            {
+                question: "Jika menemukan indikasi fraud dalam audit, langkah pertama yang harus dilakukan adalah:",
+                options: [
+                    "Melaporkan langsung ke media",
+                    "Mengabaikan karena bukan tanggung jawab auditor",
+                    "Melakukan investigasi lebih lanjut dan melaporkan sesuai prosedur",
+                    "Memberitahu rekan kerja untuk gosip"
+                ],
+                correct: 2,
+                explanation: "Temuan indikasi fraud harus ditindaklanjuti dengan investigasi yang tepat dan dilaporkan sesuai prosedur yang berlaku."
+            }
+        ];
+        
+        // Material Content
+        const materialContent = {
+            integritas: {
+                title: "🎯 Prinsip Integritas",
+                content: `
+                    <h3>Definisi Integritas</h3>
+                    <p>Integritas adalah prinsip fundamental yang mengharuskan setiap auditor untuk bersikap jujur, terbuka, dan konsisten dalam setiap tindakan profesional.</p>
+                    
+                    <h4>Komponen Utama Integritas:</h4>
+                    <ul>
+                        <li><strong>Kejujuran:</strong> Menyampaikan informasi secara akurat dan tidak menyesatkan</li>
+                        <li><strong>Transparansi:</strong> Terbuka tentang keterbatasan dan konflik yang mungkin ada</li>
+                        <li><strong>Konsistensi:</strong> Menerapkan standar yang sama dalam semua situasi</li>
+                        <li><strong>Keandalan:</strong> Dapat dipercaya dalam setiap komitmen profesional</li>
+                    </ul>
+                    
+                    <h4>Penerapan dalam Praktik:</h4>
+                    <p>Seorang auditor yang berintegritas akan:</p>
+                    <ul>
+                        <li>Melaporkan temuan audit apa adanya tanpa manipulasi</li>
+                        <li>Mengakui keterbatasan kemampuan dan mencari bantuan jika diperlukan</li>
+                        <li>Tidak menerima gratifikasi yang dapat mempengaruhi objektivitas</li>
+                        <li>Menjaga komitmen terhadap deadline dan kualitas kerja</li>
+                    </ul>
+                `
+            },
+            objektivitas: {
+                title: "⚖️ Prinsip Objektivitas",
+                content: `
+                    <h3>Definisi Objektivitas</h3>
+                    <p>Objektivitas adalah kemampuan untuk bersikap netral, tidak bias, dan independen dari pengaruh yang dapat mengganggu penilaian profesional.</p>
+                    
+                    <h4>Elemen Kunci Objektivitas:</h4>
+                    <ul>
+                        <li><strong>Independensi:</strong> Bebas dari pengaruh yang tidak pantas</li>
+                        <li><strong>Netralitas:</strong> Tidak memihak pada kepentingan tertentu</li>
+                        <li><strong>Skeptisisme Profesional:</strong> Mempertanyakan dan memverifikasi informasi</li>
+                        <li><strong>Penilaian yang Seimbang:</strong> Mempertimbangkan semua fakta relevan</li>
+                    </ul>
+                `
+            },
+            kompetensi: {
+                title: "🎓 Prinsip Kompetensi",
+                content: `
+                    <h3>Definisi Kompetensi Profesional</h3>
+                    <p>Kompetensi profesional adalah kemampuan dan keahlian yang diperlukan untuk melaksanakan tugas audit dengan standar kualitas yang tinggi.</p>
+                    
+                    <h4>Dimensi Kompetensi:</h4>
+                    <ul>
+                        <li><strong>Pengetahuan Teknis:</strong> Pemahaman standar audit dan akuntansi</li>
+                        <li><strong>Keterampilan Analitis:</strong> Kemampuan menganalisis data dan mengidentifikasi risiko</li>
+                        <li><strong>Kemampuan Komunikasi:</strong> Menyampaikan hasil audit secara efektif</li>
+                        <li><strong>Teknologi:</strong> Penguasaan tools dan software audit modern</li>
+                    </ul>
+                `
+            },
+            kerahasiaan: {
+                title: "🔒 Prinsip Kerahasiaan",
+                content: `
+                    <h3>Definisi Kerahasiaan</h3>
+                    <p>Kerahasiaan adalah kewajiban untuk melindungi informasi yang diperoleh selama proses audit dan tidak mengungkapkannya tanpa otorisasi yang tepat.</p>
+                    
+                    <h4>Ruang Lingkup Kerahasiaan:</h4>
+                    <ul>
+                        <li><strong>Informasi Keuangan:</strong> Data keuangan sensitif klien</li>
+                        <li><strong>Strategi Bisnis:</strong> Rencana dan strategi perusahaan</li>
+                        <li><strong>Informasi Personal:</strong> Data pribadi karyawan dan manajemen</li>
+                        <li><strong>Temuan Audit:</strong> Hasil audit sebelum publikasi resmi</li>
+                    </ul>
+                `
+            }
+        };
+        
+        // Main Navigation Functions
+        function showMainSection(sectionName) {
+            // Hide all main sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all main nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Log analytics
+            if (window.logEvent && window.analytics) {
+                window.logEvent(window.analytics, 'main_section_view', {
+                    section_name: sectionName
+                });
+            }
+        }
+        
+        // Interactive Sub-Navigation Functions
+        function showInteractiveSection(sectionName) {
+            // Hide all interactive sections
+            document.querySelectorAll('.interactive-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all sub nav tabs
+            document.querySelectorAll('.sub-nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Log analytics
+            if (window.logEvent && window.analytics) {
+                window.logEvent(window.analytics, 'interactive_section_view', {
+                    section_name: sectionName
+                });
+            }
+            
+            updateProgress();
+        }
+        
+        // Initialize app when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Firebase to initialize
+            setTimeout(() => {
+                loadComments();
+                loadLeaderboard();
+                loadPollData();
+                loadAnalytics();
+                initializeQuiz();
+            }, 1000);
+        });
+        
+        // User Management
+        function registerUser() {
+            const name = document.getElementById('userName').value.trim();
+            if (!name) {
+                showNotification('Mohon masukkan nama Anda!', 'error');
+                return;
+            }
+            
+            currentUser = {
+                name: name,
+                startTime: Date.now(),
+                score: 0,
+                materialsCompleted: []
+            };
+            
+            document.getElementById('userName').style.display = 'none';
+            document.querySelector('button[onclick="registerUser()"]').style.display = 'none';
+            
+            // Log analytics
+            if (window.logEvent && window.analytics) {
+                window.logEvent(window.analytics, 'user_registration', {
+                    user_name: name
+                });
+            }
+            
+            showNotification(`Selamat datang, ${name}! Mari mulai pembelajaran.`, 'success');
+        }
+        
+        // Material Management
+        function showMaterialDetail(materialType) {
+            const material = materialContent[materialType];
+            const detailDiv = document.getElementById('materialDetail');
+            const contentDiv = document.getElementById('materialContent');
+            
+            contentDiv.innerHTML = `
+                <h2>${material.title}</h2>
+                ${material.content}
+            `;
+            
+            detailDiv.style.display = 'block';
+            detailDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // Log analytics
+            if (window.logEvent && window.analytics) {
+                window.logEvent(window.analytics, 'material_view', {
+                    material_type: materialType
+                });
+            }
+        }
+        
+        function completeMaterial() {
+            if (!currentUser) {
+                showNotification('Silakan registrasi terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const materialType = getCurrentMaterialType();
+            if (materialType && !currentUser.materialsCompleted.includes(materialType)) {
+                currentUser.materialsCompleted.push(materialType);
+                showNotification('Materi berhasil diselesaikan!', 'success');
+                updateProgress();
+            }
+        }
+        
+        function getCurrentMaterialType() {
+            const content = document.getElementById('materialContent').innerHTML;
+            if (content.includes('Integritas')) return 'integritas';
+            if (content.includes('Objektivitas')) return 'objektivitas';
+            if (content.includes('Kompetensi')) return 'kompetensi';
+            if (content.includes('Kerahasiaan')) return 'kerahasiaan';
+            return null;
+        }
+        
+        // Quiz Management
+        function initializeQuiz() {
+            currentQuestion = 0;
+            userScore = 0;
+            selectedAnswer = null;
+            loadQuestion();
+        }
+        
+        function loadQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                showQuizResults();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            document.getElementById('questionText').textContent = `${currentQuestion + 1}. ${question.question}`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <input type="radio" name="answer" value="${index}" id="option${index}" style="margin-right: 10px;">
+                    <label for="option${index}">${option}</label>
+                `;
+                optionDiv.onclick = () => selectOption(index, optionDiv);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('submitBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+        }
+        
+        function selectOption(index, element) {
+            // Remove selection from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            element.classList.add('selected');
+            selectedAnswer = index;
+            
+            // Check the radio button
+            document.getElementById(`option${index}`).checked = true;
+        }
+        
+        function submitAnswer() {
+            if (selectedAnswer === null) {
+                showNotification('Silakan pilih jawaban terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            const isCorrect = selectedAnswer === question.correct;
+            
+            if (isCorrect) {
+                userScore++;
+            }
+            
+            // Show feedback
+            showAnswerFeedback(isCorrect, question);
+            
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+        
+        function showAnswerFeedback(isCorrect, question) {
+            const feedback = document.getElementById('feedback');
+            const options = document.querySelectorAll('.option');
+            
+            // Color the options
+            options.forEach((option, index) => {
+                if (index === question.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            feedback.innerHTML = `
+                <div style="background: ${isCorrect ? '#d4edda' : '#f8d7da'}; color: ${isCorrect ? '#155724' : '#721c24'}; padding: 15px; border-radius: 10px;">
+                    <strong>${isCorrect ? '✅ Benar!' : '❌ Salah!'}</strong>
+                    <p>${question.explanation}</p>
+                </div>
+            `;
+            feedback.style.display = 'block';
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            selectedAnswer = null;
+            loadQuestion();
+        }
+        
+        function showQuizResults() {
+            const percentage = Math.round((userScore / quizQuestions.length) * 100);
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            
+            document.getElementById('scoreDisplay').innerHTML = `
+                <div style="text-align: center; padding: 30px;">
+                    <div style="font-size: 3em; color: #4CAF50; margin-bottom: 20px;">${percentage}%</div>
+                    <p style="font-size: 1.2em;">Anda menjawab ${userScore} dari ${quizQuestions.length} pertanyaan dengan benar</p>
+                    <div style="margin-top: 20px;">
+                        ${percentage >= 80 ? '🎉 Excellent! Anda menguasai materi dengan baik.' : 
+                          percentage >= 60 ? '👍 Good! Silakan review materi untuk pemahaman yang lebih baik.' : 
+                          '📚 Silakan pelajari kembali materi sebelum mengulang quiz.'}
+                    </div>
+                </div>
+            `;
+            
+            if (currentUser) {
+                currentUser.score = percentage;
+                saveScoreToLeaderboard();
+            }
+            
+            // Log analytics
+            if (window.logEvent && window.analytics) {
+                window.logEvent(window.analytics, 'quiz_completed', {
+                    score: percentage,
+                    correct_answers: userScore,
+                    total_questions: quizQuestions.length
+                });
+            }
+        }
+        
+        // Leaderboard Management
+        async function saveScoreToLeaderboard() {
+            if (!currentUser || !window.db) return;
+            
+            try {
+                await window.addDoc(window.collection(window.db, 'leaderboard'), {
+                    name: currentUser.name,
+                    score: currentUser.score,
+                    timestamp: new Date(),
+                    completionTime: Math.round((Date.now() - currentUser.startTime) / 60000) // minutes
+                });
+                
+                loadLeaderboard();
+                showNotification('Skor berhasil disimpan!', 'success');
+            } catch (error) {
+                console.error('Error saving score:', error);
+            }
+        }
+        
+        async function loadLeaderboard() {
+            if (!window.db) return;
+            
+            try {
+                const q = window.query(
+                    window.collection(window.db, 'leaderboard'),
+                    window.orderBy('score', 'desc'),
+                    window.limit(10)
+                );
+                
+                const querySnapshot = await window.getDocs(q);
+                const leaderboardList = document.getElementById('leaderboardList');
+                
+                if (querySnapshot.empty) {
+                    leaderboardList.innerHTML = '<p>Belum ada data leaderboard</p>';
+                    return;
+                }
+                
+                let html = '';
+                let rank = 1;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    html += `
+                        <div class="leaderboard-item">
+                            <div>
+                                <span class="rank">#${rank}</span>
+                                <strong>${data.name}</strong>
+                            </div>
+                            <div>
+                                <span class="score">${data.score}%</span>
+                                <small style="margin-left: 10px;">${data.completionTime} menit</small>
+                            </div>
+                        </div>
+                    `;
+                    rank++;
+                });
+                
+                leaderboardList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+            }
+        }
+        
+        // Polling Management
+        async function vote(option) {
+            if (!window.db) return;
+            
+            try {
+                await window.addDoc(window.collection(window.db, 'polls'), {
+                    question: 'ethics_reporting',
+                    option: option,
+                    timestamp: new Date(),
+                    user: currentUser ? currentUser.name : 'Anonymous'
+                });
+                
+                loadPollData();
+                showNotification('Vote berhasil disimpan!', 'success');
+                
+                // Log analytics
+                if (window.logEvent && window.analytics) {
+                    window.logEvent(window.analytics, 'poll_vote', {
+                        option: option
+                    });
+                }
+            } catch (error) {
+                console.error('Error saving vote:', error);
+            }
+        }
+        
+        async function loadPollData() {
+            if (!window.db) return;
+            
+            try {
+                const querySnapshot = await window.getDocs(window.collection(window.db, 'polls'));
+                
+                let votes = { ya: 0, mungkin: 0, tidak: 0 };
+                let total = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.question === 'ethics_reporting') {
+                        votes[data.option]++;
+                        total++;
+                    }
+                });
+                
+                // Update UI
+                if (total > 0) {
+                    const yaPercent = Math.round((votes.ya / total) * 100);
+                    const mungkinPercent = Math.round((votes.mungkin / total) * 100);
+                    const tidakPercent = Math.round((votes.tidak / total) * 100);
+                    
+                    document.getElementById('pollBarYa').style.width = yaPercent + '%';
+                    document.getElementById('pollBarMungkin').style.width = mungkinPercent + '%';
+                    document.getElementById('pollBarTidak').style.width = tidakPercent + '%';
+                    
+                    document.getElementById('pollPercentYa').textContent = yaPercent + '%';
+                    document.getElementById('pollPercentMungkin').textContent = mungkinPercent + '%';
+                    document.getElementById('pollPercentTidak').textContent = tidakPercent + '%';
+                }
+                
+                document.getElementById('totalVotes').textContent = total;
+            } catch (error) {
+                console.error('Error loading poll data:', error);
+            }
+        }
+        
+        // Comments Management
+        async function addComment() {
+            const commentText = document.getElementById('commentText').value.trim();
+            if (!commentText) {
+                showNotification('Silakan tulis komentar Anda!', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                showNotification('Silakan registrasi terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (!window.db) return;
+            
+            try {
+                await window.addDoc(window.collection(window.db, 'comments'), {
+                    text: commentText,
+                    author: currentUser.name,
+                    timestamp: new Date(),
+                    section: getCurrentSection()
+                });
+                
+                document.getElementById('commentText').value = '';
+                loadComments();
+                showNotification('Komentar berhasil ditambahkan!', 'success');
+                
+                // Log analytics
+                if (window.logEvent && window.analytics) {
+                    window.logEvent(window.analytics, 'comment_added', {
+                        section: getCurrentSection()
+                    });
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        }
+        
+        async function loadComments() {
+            if (!window.db) return;
+            
+            try {
+                const q = window.query(
+                    window.collection(window.db, 'comments'),
+                    window.orderBy('timestamp', 'desc'),
+                    window.limit(20)
+                );
+                
+                const querySnapshot = await window.getDocs(q);
+                const commentsList = document.getElementById('commentsList');
+                
+                if (querySnapshot.empty) {
+                    commentsList.innerHTML = '<p>Belum ada komentar</p>';
+                    return;
+                }
+                
+                let html = '';
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleDateString('id-ID') : 'Tanggal tidak tersedia';
+                    html += `
+                        <div class="comment-item">
+                            <div class="comment-meta">
+                                <strong>${data.author}</strong> • ${date} • ${data.section}
+                            </div>
+                            <div>${data.text}</div>
+                        </div>
+                    `;
+                });
+                
+                commentsList.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading comments:', error);
+            }
+        }
+        
+        function getCurrentSection() {
+            const activeSection = document.querySelector('.interactive-section.active');
+            return activeSection ? activeSection.id : 'unknown';
+        }
+        
+        // Analytics
+        async function loadAnalytics() {
+            if (!window.db) return;
+            
+            try {
+                // Load participants
+                const leaderboardSnapshot = await window.getDocs(window.collection(window.db, 'leaderboard'));
+                document.getElementById('totalParticipants').textContent = leaderboardSnapshot.size;
+                
+                // Calculate average time
+                let totalTime = 0;
+                let count = 0;
+                leaderboardSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.completionTime) {
+                        totalTime += data.completionTime;
+                        count++;
+                    }
+                });
+                const avgTime = count > 0 ? Math.round(totalTime / count) : 0;
+                document.getElementById('averageTime').textContent = avgTime + ' menit';
+                
+                // Calculate pass rate
+                let passCount = 0;
+                leaderboardSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.score >= 80) passCount++;
+                });
+                const passRate = leaderboardSnapshot.size > 0 ? Math.round((passCount / leaderboardSnapshot.size) * 100) : 0;
+                document.getElementById('passRate').textContent = passRate + '%';
+                
+                // Load comments count
+                const commentsSnapshot = await window.getDocs(window.collection(window.db, 'comments'));
+                document.getElementById('totalComments').textContent = commentsSnapshot.size;
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        // Certificate Generation
+        function generateCertificate() {
+            if (!currentUser || currentUser.score < 80) {
+                showNotification('Maaf, Anda perlu skor minimal 80% untuk mendapatkan sertifikat!', 'error');
+                return;
+            }
+            
+            // Fill certificate data
+            document.getElementById('certificateName').textContent = currentUser.name;
+            document.getElementById('certificateScore').textContent = currentUser.score + '%';
+            document.getElementById('certificateDate').textContent = new Date().toLocaleDateString('id-ID');
+            
+            // Show certificate
+            const certificate = document.getElementById('certificateTemplate');
+            certificate.style.display = 'block';
+            certificate.scrollIntoView({ behavior: 'smooth' });
+            
+            // Generate PDF
+            setTimeout(() => {
+                generatePDF();
+            }, 1000);
+        }
+        
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const certificate = document.querySelector('.certificate');
+            
+            html2canvas(certificate, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('l', 'mm', 'a4');
+                
+                const imgWidth = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save(`Sertifikat_${currentUser.name}_KodeEtik_BPKH.pdf`);
+                
+                showNotification('Sertifikat berhasil didownload!', 'success');
+            });
+        }
+        
+        // Progress Management
+        function updateProgress() {
+            if (!currentUser) return;
+            
+            let progress = 0;
+            const totalSteps = 5; // materi (4) + quiz (1)
+            
+            // Material progress
+            progress += currentUser.materialsCompleted.length;
+            
+            // Quiz progress
+            if (currentUser.score > 0) progress += 1;
+            
+            const percentage = Math.round((progress / totalSteps) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Progress: ${percentage}%`;
+        }
+        
+        // Utility Functions
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Expand functionality for document cards
+        function toggleExpand(element) {
+            const expandableContent = element.querySelector('.expandable-content');
+            const btn = element.querySelector('.expand-btn i');
+            
+            if (expandableContent.classList.contains('active')) {
+                expandableContent.classList.remove('active');
+                btn.className = 'fas fa-plus';
+            } else {
+                // Close all other expanded contents
+                document.querySelectorAll('.expandable-content.active').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.querySelectorAll('.expand-btn i').forEach(icon => {
+                    icon.className = 'fas fa-plus';
+                });
+                
+                // Open current content
+                expandableContent.classList.add('active');
+                btn.className = 'fas fa-minus';
+            }
+        }
+        
+        // Real-time updates
+        if (window.onSnapshot && window.db) {
+            // Listen for leaderboard updates
+            window.onSnapshot(window.collection(window.db, 'leaderboard'), () => {
+                loadLeaderboard();
+                loadAnalytics();
+            });
+            
+            // Listen for poll updates
+            window.onSnapshot(window.collection(window.db, 'polls'), () => {
+                loadPollData();
+            });
+            
+            // Listen for comment updates
+            window.onSnapshot(window.collection(window.db, 'comments'), () => {
+                loadComments();
+                loadAnalytics();
+            });
+        }
+    </script>
+</body>
+</html>
