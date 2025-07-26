@@ -84,6 +84,6 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; font-size: 0.9rem;'>
     <p><strong>Narasumber:</strong> M Sopian Hadianto | Anggota Komite Audit</p>
-    <p>BPKH - Badan Pengawasan Keuangan Haji | Platform Sosialisasi Interaktif</p>
+    <p>BPKH - Badan Pengelola Keuangan Haji | Platform Sosialisasi Interaktif</p>
 </div>
 """, unsafe_allow_html=True)
